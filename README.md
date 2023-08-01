@@ -1,8 +1,21 @@
 # agenda_contatos
 
-A new Flutter project.
+Agenda de Contatos Flutter
 
 ## Getting Started
+
+Projeto de uma agenda para simples exibição dos contatos telefônicos. 
+
+Versão 1.0.1
+
+Sistema de arquivos: Mock
+
+Últimas atualizações: 
+ - Exibição ordenada dos nomes
+ - Quando está exibindo apenas favoritos, ao remover contato dos favoritos atualiza exibição
+
+================================================================================================
+
 
 This project is a starting point for a Flutter application.
 
