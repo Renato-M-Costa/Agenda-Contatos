@@ -4,9 +4,9 @@ Agenda de Contatos Flutter
 
 ## Getting Started
 
-Projeto de uma agenda para simples exibição dos contatos telefônicos. 
+Projeto de uma agenda para gerenciamento dos contatos. 
 
-Versão 1.0.1
+Versão 1.0.1 (simples exibição dos contatos telefônicos).
 
 Sistema de arquivos: Mock
 
