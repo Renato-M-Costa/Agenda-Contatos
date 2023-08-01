@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'package:agenda_contatos/components/contact_alert.dart';
 import 'package:agenda_contatos/models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,59 +19,59 @@ class ContactItem extends StatelessWidget {
     this.favoriteOnlySelected,
   }) : super(key: key);
 
-  Future _contactAlert(BuildContext context, Contact contact) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Contato'),
-        content: const Text('Deseja alterar ou excluir o contato?'),
-        actions: [
-          ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar')),
-          ElevatedButton(
-              //onPressed: () => Navigator.pop(context),
-              onPressed: () => _openEditContactForm(context, contact),
-              child: const Text('Alterar')),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: Text('Exculir ${contact.name}?'),
-                    content:
-                        Text('Tem certeza que seja excluir ${contact.name}?'),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancelar')),
-                      ElevatedButton(
-                        onPressed: () {
-                          Provider.of<ContactList>(context, listen: false)
-                              .removeContact(contact);
-                          //Navigator.pop(context);
-                          Navigator.of(context).pushReplacementNamed('/');
-                        },
-                        child: const Text('Excluir'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: const Text('Excluir')),
-        ],
-      ),
-    );
-  }
+  // Future _contactAlert(BuildContext context, Contact contact) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) => AlertDialog(
+  //       title: const Text('Contato'),
+  //       content: const Text('Deseja alterar ou excluir o contato?'),
+  //       actions: [
+  //         ElevatedButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Cancelar')),
+  //         ElevatedButton(
+  //             //onPressed: () => Navigator.pop(context),
+  //             onPressed: () => _openEditContactForm(context, contact),
+  //             child: const Text('Alterar')),
+  //         ElevatedButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //               showDialog(
+  //                 context: context,
+  //                 builder: (BuildContext context) => AlertDialog(
+  //                   title: Text('Exculir ${contact.name}?'),
+  //                   content:
+  //                       Text('Tem certeza que seja excluir ${contact.name}?'),
+  //                   actions: [
+  //                     ElevatedButton(
+  //                         onPressed: () => Navigator.pop(context),
+  //                         child: const Text('Cancelar')),
+  //                     ElevatedButton(
+  //                       onPressed: () {
+  //                         Provider.of<ContactList>(context, listen: false)
+  //                             .removeContact(contact);
+  //                         //Navigator.pop(context);
+  //                         Navigator.of(context).pushReplacementNamed('/');
+  //                       },
+  //                       child: const Text('Excluir'),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               );
+  //             },
+  //             child: const Text('Excluir')),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  _openEditContactForm(BuildContext context, Contact contact) {
-    showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return EditContactForm(contact: contact);
-        });
-  }
+  // _openEditContactForm(BuildContext context, Contact contact) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (_) {
+  //         return EditContactForm(contact: contact);
+  //       });
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,8 @@ class ContactItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onLongPress: () => _contactAlert(context, contact),
+              // onLongPress: () => _contactAlert(context, contact),
+              onLongPress: () => ContactAlert().contactAlert(context, contact),
               child: Ink(
                 //color: Colors.amber,
                 child: SizedBox(
@@ -113,11 +115,6 @@ class ContactItem extends StatelessWidget {
                   if (showFavoriteOnly == true) {
                     favoriteOnlySelected!(true);
                   }
-                  // else if (showFavoriteOnly == false) {
-                  //   print('showFavoriteOnly é false');
-                  // } else {
-                  //   print('showFavoriteOnly é null');
-                  // }
                 },
                 icon: Icon(contact.isFavorite
                     ? Icons.favorite
