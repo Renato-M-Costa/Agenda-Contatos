@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 import '../data/contact_list.dart';
 import 'edit_contact_form.dart';
 
-class ContactItem extends StatelessWidget {
-  //TESTE
+class ContactItem extends StatefulWidget {
   final bool showFavoriteOnly;
   final void Function(bool)? favoriteOnlySelected;
+  bool expanded = false;
 
   ContactItem({
     Key? key,
@@ -19,110 +19,77 @@ class ContactItem extends StatelessWidget {
     this.favoriteOnlySelected,
   }) : super(key: key);
 
-  // Future _contactAlert(BuildContext context, Contact contact) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) => AlertDialog(
-  //       title: const Text('Contato'),
-  //       content: const Text('Deseja alterar ou excluir o contato?'),
-  //       actions: [
-  //         ElevatedButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: const Text('Cancelar')),
-  //         ElevatedButton(
-  //             //onPressed: () => Navigator.pop(context),
-  //             onPressed: () => _openEditContactForm(context, contact),
-  //             child: const Text('Alterar')),
-  //         ElevatedButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (BuildContext context) => AlertDialog(
-  //                   title: Text('Exculir ${contact.name}?'),
-  //                   content:
-  //                       Text('Tem certeza que seja excluir ${contact.name}?'),
-  //                   actions: [
-  //                     ElevatedButton(
-  //                         onPressed: () => Navigator.pop(context),
-  //                         child: const Text('Cancelar')),
-  //                     ElevatedButton(
-  //                       onPressed: () {
-  //                         Provider.of<ContactList>(context, listen: false)
-  //                             .removeContact(contact);
-  //                         //Navigator.pop(context);
-  //                         Navigator.of(context).pushReplacementNamed('/');
-  //                       },
-  //                       child: const Text('Excluir'),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //             child: const Text('Excluir')),
-  //       ],
-  //     ),
-  //   );
-  // }
+  @override
+  State<ContactItem> createState() => _ContactItemState();
+}
 
-  // _openEditContactForm(BuildContext context, Contact contact) {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (_) {
-  //         return EditContactForm(contact: contact);
-  //       });
-  //}
-
+class _ContactItemState extends State<ContactItem> {
+  //bool _expanded = false;
   @override
   Widget build(BuildContext context) {
     //print('showFavoriteOnly: ${showFavoriteOnly}');
     final contact = Provider.of<Contact>(context, listen: false);
     return Card(
-      //color: Colors.grey,
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 5,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            InkWell(
-              // onLongPress: () => _contactAlert(context, contact),
-              onLongPress: () => ContactAlert().contactAlert(context, contact),
-              child: Ink(
-                //color: Colors.amber,
-                child: SizedBox(
-                  width: 280,
-                  height: 40,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //Text('${contact.id.toString()} - ${contact.name}'),
-                      Text(contact.name),
-                      Text(contact.phone),
-                    ],
+      child: Column(
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(
+                Icons.person_rounded,
+              ),
+            ),
+            title: Text(contact.name),
+            trailing: IconButton(
+              icon: const Icon(Icons.expand_more),
+              onPressed: () {
+                setState(() {
+                  //_expanded = !_expanded;
+                  widget.expanded = !widget.expanded;
+                });
+              },
+            ),
+          ),
+          if (widget.expanded)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                //const SizedBox(width: 1),
+                InkWell(
+                  onLongPress: () =>
+                      ContactAlert().contactAlert(context, contact),
+                  child: Ink(
+                    //color: Colors.amber,
+                    child: SizedBox(
+                      width: 230,
+                      height: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(contact.phone),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Consumer<Contact>(
+                  builder: (ctx, contact, _) => IconButton(
+                    onPressed: () {
+                      contact.toogleFavorite();
+
+                      //Caso esteja exibindo apenas favoritos, atualiza a exibição para remover contato dos favoritos
+                      if (widget.showFavoriteOnly == true) {
+                        widget.favoriteOnlySelected!(true);
+                      }
+                    },
+                    icon: Icon(contact.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                  ),
+                ),
+              ],
             ),
-            //SizedBox(width: 10),
-            Consumer<Contact>(
-              builder: (ctx, contact, _) => IconButton(
-                onPressed: () {
-                  contact.toogleFavorite();
-                  //Caso esteja exibindo apenas favoritos, atualiza a exibição para remover contato dos favoritos
-                  if (showFavoriteOnly == true) {
-                    favoriteOnlySelected!(true);
-                  }
-                },
-                icon: Icon(contact.isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
